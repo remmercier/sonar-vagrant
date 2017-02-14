@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_POSTGRES_USER=sonar
+    ports:
+      - "5432:5432"
+    networks:
+      - sonarnetwork
+    restart: always
+
+  sonarqube:
+    image: sonarqube
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://database:5432/sonar
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    networks:
+      - sonarnetwork
+    restart: always
+    depends_on:
+      - database
+
+networks:
+
+  sonarnetwork:
+    driver: bridge
